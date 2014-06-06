@@ -15,6 +15,10 @@
   "author": "Lucas Silva/Gustavo Goncalves",
   "license": "ISC",
   "dependencies": {
-    "express": "~4.4.1"
+    "express": "~4.4.1",
+    "socket.io": "~0.9.17",
+    "connect": "~2.19.4",
+    "method-override": "~2.0.2",
+    "error-handler": "~1.0.0"
   }
 }
