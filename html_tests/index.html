@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script>
+        var socket = io.connect();
+        var GameId = 0;
+        var Player = 0;
+
+
+        socket.on("welcome", function(mensagem, callback){
+            console.log(mensagem);
+            callback("mensagem recebida");
+        });
+
+
+        socket.on("new_message", function(message){
+            $("#resposta").html("Mensagem recebida: "+ message.text);
+        });
+
+        socket.on("player2_joined", function(joinedGame){
+            $("#resposta").html("Voce está jogando com: " + joinedGame.player2);
+        });
+
+        socket.on("list_of_public_games", function(publicGames){
+            console.log(publicGames);
+            //for(x=0;x < publicGames.length;x++)
+            //{
+            //    alert();
+            //}
+        });
+
+        $(document).ready(function(){
+            $("#btEnvia").click(function(){
+                var mensagem = {
+                    text : $("#mensagem").val(),
+                    to : $("#to").val()
+                };
+                if(Player == 1)
+                {
+                    socket.emit("message_to_player2", mensagem);
+                }else{
+                    socket.emit("message_to_player1", mensagem);
+                }
+
+            });
+
+            $("#btJoinGame").click(function(){
+
+
+
+                var game = {
+                    id : $("#joinGameId").val(),
+                    name : $("#name").val()
+                };
+                socket.emit("join_game", game, function(joinedGame){
+                    if(joinedGame.error)
+                    {
+                        $("#resposta").html("Voce está jogando com: " + joinedGame.error);
+                    }else{
+                        Player = 2;
+                        GameId = joinedGame.id;
+                        $("#resposta").html("Voce está jogando com: " + joinedGame.player1);
+                    }
+
+                });
+            });
+
+            $("#btCreateGame").click(function(){
+                var user = {
+                    name: $("#name").val(),
+                    public : $("#publico").is(":checked")
+                };
+                socket.emit("create_game", user, function (gameId) {
+                    Player = 1;
+                    GameId = gameId;
+                    $("#name").val("");
+                    console.log(gameId);
+                });
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+    Nome: <input type="text" id="name" /> <input type="checkbox" checked="checked" id="publico" /> Público
+    <button type="button" id="btCreateGame">Cria Jogo</button>
+    <br />
+
+    Game To Join: <input type="text" id="joinGameId" /> <button type="button" id="btJoinGame" > Entrar no jogo </button>
+    <br />
+    Mensagem para o outro player: <input type="text" id="mensagem" />
+    <button type="button"  id="btEnvia">Enviar Mensagem</button>
+<div id="resposta"></div>
+</body>
+</html>
