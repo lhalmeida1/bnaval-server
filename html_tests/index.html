@@ -81,6 +81,21 @@
                     console.log(gameId);
                 });
             });
+
+            $("#btPlaceShip").click(function(){
+                var shipType = $("#ship_type").val();
+                var x = $("#ship_x").val();
+                var y = $("#ship_y").val();
+                var vertical = $("#ship_vertical").is(":checked");
+                socket.emit("place_ship", shipType, x, y, vertical, function(result){
+                    if(result.success)
+                    {
+                        alert(shipType + " adicionado!")
+                    }else{
+                        alert("local ocupado");
+                    }
+                });
+            });
         });
 
 
@@ -95,6 +110,15 @@
     <br />
     Mensagem para o outro player: <input type="text" id="mensagem" />
     <button type="button"  id="btEnvia">Enviar Mensagem</button>
+
+    <br />
+    x: <input type="text" id="ship_x" /> y: <input type="text" id="ship_y" />
+    Tipo:
+    <select id="ship_type">
+        <option value="encouracado">Encouraçado</option>
+    </select>
+    <input type="checkbox" id="ship_vertical"> Vertical
+    <button type="button" id="btPlaceShip">Colocar Navio</button>
 <div id="resposta"></div>
 </body>
 </html>
