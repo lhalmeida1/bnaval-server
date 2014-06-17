@@ -12,7 +12,7 @@ var encouracado = function(x,y,vertical){
         else
             this.positions[i] = { x : this.x + i, y : this.y, destroyed : false };
 
-    this.destroyed = function(){
+    this.destroyed = function() {
         var _destroyed = true;
         for(i = 0; i < this.size; i++)
         {
