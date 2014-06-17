@@ -88,11 +88,36 @@
                 var y = $("#ship_y").val();
                 var vertical = $("#ship_vertical").is(":checked");
                 socket.emit("place_ship", shipType, x, y, vertical, function(result){
+                    var boardSize = 10;
                     if(result.success)
                     {
-                        alert(shipType + " adicionado!")
+                        var table = "";
+                        for(y = 0; y < boardSize; y++)
+                        {
+                            var tr = "<tr>";
+                            for(x = 0; x < boardSize; x++)
+                            {
+                                if(result.board[x][y] != undefined) {
+                                    var ship = result.board[x][y].ship;
+                                    var part = result.board[x][y].part;
+                                    if(ship.positions[part].destroyed)
+                                    {
+                                        tr += "<td><img src=\"img/ship_destroyed.png\" /></td>";
+                                    }else{
+                                        tr += "<td><img src=\"img/ship_ok.png\" /></td>";
+                                    }
+
+                                }else {
+                                    tr += "<td><img src=\"img/sea.png\" /></td>";
+                                }
+                            }
+                            tr += "</tr>" +
+                                    "";
+                            table += tr;
+                        }
+                        $("#tabuleiro-user").html(table);
                     }else{
-                        alert("local ocupado");
+                        alert(result.message);
                     }
                 });
             });
@@ -120,5 +145,10 @@
     <input type="checkbox" id="ship_vertical"> Vertical
     <button type="button" id="btPlaceShip">Colocar Navio</button>
 <div id="resposta"></div>
+
+
+<table class="table" id="tabuleiro-user" style="border: 1px solid black;">
+
+</table>
 </body>
 </html>

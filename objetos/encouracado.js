@@ -1,6 +1,6 @@
 var encouracado = function(x,y,vertical){
-    this.x = x;
-    this.y = y;
+    this.x = parseInt(x);
+    this.y = parseInt(y);
     this.size = 3;
     this.name = "Encouraçado";
     this.vertical = vertical;
